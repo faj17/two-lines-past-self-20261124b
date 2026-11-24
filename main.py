@@ -1,8 +1,17 @@
 """Two lines to your past self, for the make.fun bounty.
 
-Line 1 warns the writer's past self about one specific moment: hanging
-up on his father on Christmas Eve. Line 2 says why it mattered: the
-father never asked again, and the silence outlived him by twenty years.
+Why this moment, against the rubric: of the five candidates considered
+(see BUILD_LOG.md), the Christmas Eve call wins on every criterion.
+Line 1 names one exact, picturable moment — a phone call on Christmas
+Eve, the father asking him to come home, the decision to hang up —
+instead of a vague regret. Line 2 traces a real cause and effect across
+twenty years: he never asked again, and the silence outlived him. That
+span is what makes the warning matter; the other candidates ended the
+same morning (the porch), in a debt (the loan), or in a told regret
+(the application). The voice stays plain and addressed to one specific
+person — no cleverness, no wasted words — which is why the entry is the
+shortest of the five at 156 characters.
+
 The script validates the two lines and drops them into /output/entry.txt.
 """
 
@@ -34,8 +43,15 @@ def validate(text: str) -> str:
             raise ValueError("entry lines must not be empty")
         if not line.endswith("."):
             raise ValueError("each line must end with a full stop")
-        if ". " in line:
-            raise ValueError("each line must be a single sentence (no '. ' inside)")
+        # One sentence per line: no sentence terminator followed by more
+        # text inside the line (a second sentence hiding after ". ", "! "
+        # or "? " would break the two-line, one-sentence-per-line shape).
+        for sep in (". ", "! ", "? "):
+            if sep in line:
+                raise ValueError(
+                    "each line must be a single sentence "
+                    f"(found {sep!r} inside a line)"
+                )
     return text
 
 
